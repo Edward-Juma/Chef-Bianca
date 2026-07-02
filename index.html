@@ -246,22 +246,23 @@ I proceeded to Paris France studied fine dining culinary and worked in 3 differe
     </div>
     <div class="booking-form reveal-right" id="booking-form-wrap">
       <form id="booking-form">
+        <div class="form-error" id="form-error" style="display:none;color:#F8F5F0;background:rgba(220,38,38,0.15);border:1px solid rgba(248,113,113,0.35);border-radius:12px;padding:14px;margin-bottom:16px;"></div>
         <div class="form-row">
-          <div class="form-group"><label>Full Name</label><input type="text" placeholder="Your Name" required></div>
-          <div class="form-group"><label>Email Address</label><input type="email" placeholder="your.email@example.com" required></div>
+          <div class="form-group"><label for="fullName">Full Name</label><input id="fullName" name="fullName" type="text" placeholder="Your Name" required></div>
+          <div class="form-group"><label for="email">Email Address</label><input id="email" name="email" type="email" placeholder="your.email@example.com" required></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Phone Number</label><input type="tel" placeholder="+254 700 000 000"></div>
-          <div class="form-group"><label>Number of Guests</label><input type="number" placeholder="4" min="1"></div>
+          <div class="form-group"><label for="phone">Phone Number</label><input id="phone" name="phone" type="tel" placeholder="+254 700 000 000"></div>
+          <div class="form-group"><label for="guests">Number of Guests</label><input id="guests" name="guests" type="number" placeholder="4" min="1"></div>
         </div>
         <div class="form-row">
-          <div class="form-group"><label>Preferred Date</label><input type="date"></div>
-          <div class="form-group"><label>Preferred Time</label><input type="time"></div>
+          <div class="form-group"><label for="date">Preferred Date</label><input id="date" name="date" type="date"></div>
+          <div class="form-group"><label for="time">Preferred Time</label><input id="time" name="time" type="time"></div>
         </div>
         <div class="form-row">
           <div class="form-group">
-            <label>Occasion</label>
-            <select>
+            <label for="occasion">Occasion</label>
+            <select id="occasion" name="occasion">
               <option value="">Select occasion</option>
               <option>Romantic Dinner</option>
               <option>Birthday Celebration</option>
@@ -272,8 +273,8 @@ I proceeded to Paris France studied fine dining culinary and worked in 3 differe
             </select>
           </div>
           <div class="form-group">
-            <label>Estimated Budget</label>
-            <select>
+            <label for="budget">Estimated Budget</label>
+            <select id="budget" name="budget">
               <option value="">Select range</option>
               <option>$200 – $500</option>
               <option>$500 – $1,000</option>
@@ -282,8 +283,8 @@ I proceeded to Paris France studied fine dining culinary and worked in 3 differe
             </select>
           </div>
         </div>
-        <div class="form-group"><label>Event Location</label><input type="text" placeholder="Your home address or venue name"></div>
-        <div class="form-group"><label>Additional Notes</label><textarea placeholder="Dietary restrictions, preferred cuisine, special requests..."></textarea></div>
+        <div class="form-group"><label for="location">Event Location</label><input id="location" name="location" type="text" placeholder="Your home address or venue name"></div>
+        <div class="form-group"><label for="notes">Additional Notes</label><textarea id="notes" name="notes" placeholder="Dietary restrictions, preferred cuisine, special requests..."></textarea></div>
         <button type="submit" class="form-submit">Send Booking Request</button>
       </form>
       <div class="form-success" id="form-success">
@@ -309,7 +310,7 @@ I proceeded to Paris France studied fine dining culinary and worked in 3 differe
         </div>
         <div class="contact-item">
           <div class="c-icon"><i class="fas fa-envelope"></i></div>
-          <div><div class="c-label">Email</div><div class="c-val">biancaindoshi204@gmail.com</div></div>
+          <div><div class="c-label">Email</div><div class="c-val">ejuma670@gmail.com</div></div>
         </div>
         <div class="contact-item">
           <div class="c-icon"><i class="fas fa-map-pin"></i></div>

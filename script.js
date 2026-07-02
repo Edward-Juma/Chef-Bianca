@@ -466,27 +466,108 @@ function observeAll() {
 /* =============================================
    MOBILE MENU
    ============================================= */
-document.getElementById('hamburger').addEventListener('click', () => {
-  document.getElementById('mobile-menu').classList.add('open');
+const hamburger = document.getElementById('hamburger');
+const mobileMenu = document.getElementById('mobile-menu');
+const mobileClose = document.getElementById('mobile-close');
+
+function openMobileMenu() {
+  if (!mobileMenu || !hamburger) return;
+  mobileMenu.classList.add('open');
+  hamburger.setAttribute('aria-expanded', 'true');
   document.body.style.overflow = 'hidden';
-});
-document.getElementById('mobile-close').addEventListener('click', () => {
-  document.getElementById('mobile-menu').classList.remove('open');
+}
+
+function closeMobileMenu() {
+  if (!mobileMenu || !hamburger) return;
+  mobileMenu.classList.remove('open');
+  hamburger.setAttribute('aria-expanded', 'false');
   document.body.style.overflow = '';
+}
+
+if (hamburger) {
+  hamburger.addEventListener('click', openMobileMenu);
+}
+
+if (mobileClose) {
+  mobileClose.addEventListener('click', closeMobileMenu);
+}
+
+document.querySelectorAll('#mobile-menu a').forEach(link => {
+  link.addEventListener('click', closeMobileMenu);
 });
-document.querySelectorAll('.mobile-link').forEach(a => a.addEventListener('click', () => {
-  document.getElementById('mobile-menu').classList.remove('open');
-  document.body.style.overflow = '';
-}));
+
+document.addEventListener('keydown', event => {
+  if (event.key === 'Escape' && mobileMenu?.classList.contains('open')) {
+    closeMobileMenu();
+  }
+});
+
+document.addEventListener('click', event => {
+  if (!mobileMenu?.classList.contains('open')) return;
+  const clickedInsideMenu = mobileMenu.contains(event.target);
+  const clickedHamburger = hamburger?.contains(event.target);
+  if (!clickedInsideMenu && !clickedHamburger) {
+    closeMobileMenu();
+  }
+});
 
 /* =============================================
    BOOKING FORM
    ============================================= */
-document.getElementById('booking-form').addEventListener('submit', e => {
+const bookingForm = document.getElementById('booking-form');
+const bookingError = document.getElementById('form-error');
+const bookingSuccess = document.getElementById('form-success');
+
+bookingForm.addEventListener('submit', async e => {
   e.preventDefault();
-  document.getElementById('booking-form').style.display = 'none';
-  const success = document.getElementById('form-success');
-  success.style.display = 'block';
+  bookingError.style.display = 'none';
+  bookingError.textContent = '';
+
+  const formData = new FormData(bookingForm);
+  const payload = {
+    fullName: formData.get('fullName')?.trim(),
+    email: formData.get('email')?.trim(),
+    phone: formData.get('phone')?.trim(),
+    guests: formData.get('guests')?.trim(),
+    date: formData.get('date')?.trim(),
+    time: formData.get('time')?.trim(),
+    occasion: formData.get('occasion')?.trim(),
+    budget: formData.get('budget')?.trim(),
+    location: formData.get('location')?.trim(),
+    notes: formData.get('notes')?.trim(),
+  };
+
+  const submitButton = bookingForm.querySelector('button[type="submit"]');
+  const originalText = submitButton.textContent;
+  submitButton.disabled = true;
+  submitButton.textContent = 'Sending...';
+
+  try {
+    const response = await fetch('/api/booking', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+
+    const result = await response.json().catch(() => ({}));
+
+    if (!response.ok) {
+      const message = result.errors ? result.errors.join(' ') : result.message || 'Unable to send booking. Please try again.';
+      bookingError.textContent = message;
+      bookingError.style.display = 'block';
+      return;
+    }
+
+    bookingForm.reset();
+    bookingForm.style.display = 'none';
+    bookingSuccess.style.display = 'block';
+  } catch (error) {
+    bookingError.textContent = 'Unable to submit booking right now. Please try again later.';
+    bookingError.style.display = 'block';
+  } finally {
+    submitButton.disabled = false;
+    submitButton.textContent = originalText;
+  }
 });
 
 /* =============================================

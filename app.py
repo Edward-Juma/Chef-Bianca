@@ -1,5 +1,5 @@
 """
-Chef Alessandro — Booking Form Backend
+Chef Bianca — Booking Form Backend
 ========================================
 A small Flask API that receives booking requests from the website's
 booking form, validates them, stores them, and emails a notification
@@ -26,9 +26,10 @@ app = Flask(__name__)
 # Replace "*" with your actual site URL once deployed, e.g.
 # CORS(app, resources={r"/api/*": {"origins": "https://chefalessandro.com"}})
 # -----------------------------------------------------------------
-CORS(app, resources={r"/api/*": {"origins": "*"}})
+CORS(app, resources={r"/api/*": {"origins": "https://chef-bianca.onrender.com"}})
 
-DB_PATH = os.environ.get("DB_PATH", "bookings.db")
+BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+DB_PATH = os.environ.get("DB_PATH", os.path.join(BASE_DIR, "bookings.db"))
 
 # -----------------------------------------------------------------
 # Email configuration — set these as Environment Variables on Render,
@@ -258,5 +259,6 @@ def list_bookings():
 
 
 if __name__ == "__main__":
-    port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port, debug=False)
+    port = int(os.environ.get("PORT", "5000"))
+    debug_mode = os.environ.get("FLASK_DEBUG", "false").lower() == "true"
+    app.run(host="0.0.0.0", port=port, debug=debug_mode)
