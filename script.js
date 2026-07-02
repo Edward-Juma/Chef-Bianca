@@ -512,61 +512,59 @@ document.addEventListener('click', event => {
 });
 
 /* =============================================
-   BOOKING FORM
-   ============================================= */
-const bookingForm = document.getElementById('booking-form');
-const bookingError = document.getElementById('form-error');
-const bookingSuccess = document.getElementById('form-success');
+   BOOKING FORM — connects to the Python/Flask backend on Render
+   =============================================
+   Replace API_BASE_URL with your actual Render service URL,
+   e.g. "https://chef-alessandro-booking-api.onrender.com"
+*/
+const API_BASE_URL = "https://chef-bianca.onrender.com";
 
-bookingForm.addEventListener('submit', async e => {
+document.getElementById('booking-form').addEventListener('submit', async (e) => {
   e.preventDefault();
-  bookingError.style.display = 'none';
-  bookingError.textContent = '';
 
-  const formData = new FormData(bookingForm);
+  const form = e.target;
+  const submitBtn = form.querySelector('.form-submit');
+  const originalText = submitBtn.textContent;
+  submitBtn.textContent = 'Sending...';
+  submitBtn.disabled = true;
+
+  // Collect form fields by their position (matches the form-row order in the HTML)
+  const inputs = form.querySelectorAll('input, select, textarea');
   const payload = {
-    fullName: formData.get('fullName')?.trim(),
-    email: formData.get('email')?.trim(),
-    phone: formData.get('phone')?.trim(),
-    guests: formData.get('guests')?.trim(),
-    date: formData.get('date')?.trim(),
-    time: formData.get('time')?.trim(),
-    occasion: formData.get('occasion')?.trim(),
-    budget: formData.get('budget')?.trim(),
-    location: formData.get('location')?.trim(),
-    notes: formData.get('notes')?.trim(),
+    fullName: inputs[0].value,
+    email: inputs[1].value,
+    phone: inputs[2].value,
+    guests: inputs[3].value,
+    date: inputs[4].value,
+    time: inputs[5].value,
+    occasion: inputs[6].value,
+    budget: inputs[7].value,
+    location: inputs[8].value,
+    notes: inputs[9].value,
   };
 
-  const submitButton = bookingForm.querySelector('button[type="submit"]');
-  const originalText = submitButton.textContent;
-  submitButton.disabled = true;
-  submitButton.textContent = 'Sending...';
-
   try {
-    const response = await fetch('/api/booking', {
+    const response = await fetch(`${API_BASE_URL}/api/booking`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload),
     });
 
-    const result = await response.json().catch(() => ({}));
+    const result = await response.json();
 
-    if (!response.ok) {
-      const message = result.errors ? result.errors.join(' ') : result.message || 'Unable to send booking. Please try again.';
-      bookingError.textContent = message;
-      bookingError.style.display = 'block';
-      return;
+    if (response.ok && result.success) {
+      form.style.display = 'none';
+      document.getElementById('form-success').style.display = 'block';
+    } else {
+      const messages = (result.errors || ['Something went wrong. Please try again.']).join('\n');
+      alert(messages);
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
     }
-
-    bookingForm.reset();
-    bookingForm.style.display = 'none';
-    bookingSuccess.style.display = 'block';
-  } catch (error) {
-    bookingError.textContent = 'Unable to submit booking right now. Please try again later.';
-    bookingError.style.display = 'block';
-  } finally {
-    submitButton.disabled = false;
-    submitButton.textContent = originalText;
+  } catch (err) {
+    alert('Could not reach the booking server. Please check your connection and try again, or contact us directly via WhatsApp.');
+    submitBtn.textContent = originalText;
+    submitBtn.disabled = false;
   }
 });
 
